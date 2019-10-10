@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "245025672744",
+    "firebase_url": "https://fir-banco-880b8.firebaseio.com",
+    "project_id": "fir-banco-880b8",
+    "storage_bucket": "fir-banco-880b8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:245025672744:android:42ed1c733ae583f1c9ef1d",
+        "android_client_info": {
+          "package_name": "com.example.firebasebanco"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "245025672744-f3hksauum1sq5h09omvbp7nnk5u64bb5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.firebasebanco",
+            "certificate_hash": "dcb6dfe9ec7816e872068b672e2db04382b3b0fe"
+          }
+        },
+        {
+          "client_id": "245025672744-1ntu24svbhumjpss7qvde75vs4eodt6t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdzd4ls3zJRi6em7ntm8oNvbHEUu9tiNo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "245025672744-1ntu24svbhumjpss7qvde75vs4eodt6t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

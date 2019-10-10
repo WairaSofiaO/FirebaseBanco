@@ -1,0 +1,159 @@
+package com.example.appfbfact;
+
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class MainActivity extends AppCompatActivity {
+    EditText ref,descrip,precio;
+    Button guardar,buscar,buscar1,borrar,actualizar;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    String idauto;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        ref = findViewById(R.id.etref);
+        descrip = findViewById(R.id.etdescrip);
+        precio = findViewById(R.id.etprecio);
+
+        guardar = findViewById(R.id.btnguardar);
+        buscar1 = findViewById(R.id.btnbuscar1);
+
+        borrar = findViewById(R.id.btnborrar);
+
+        actualizar = findViewById(R.id.btnactualizar);
+
+        actualizar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map<String, Object> mprods = new HashMap<>();
+                mprods.put("ref", ref.getText().toString());
+                mprods.put("descrip", descrip.getText().toString());
+                mprods.put("precio", precio.getText().toString());
+
+
+                db.collection("prods").document(idauto)
+                        .set(mprods)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                //Log.d("cliente", "DocumentSnapshot successfully written!");
+                                Toast.makeText(MainActivity.this,"Producto actualizado correctmente...",Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("cliente", "Error writing document", e);
+                            }
+                        });
+            }
+        });
+
+
+
+        borrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.collection("prods").document(idauto)
+                        .delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                //Log.d("cliente", "DocumentSnapshot successfully deleted!");
+                                Toast.makeText(MainActivity.this,"Producto borrado correctamente...",Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("Prods", "Error deleting document", e);
+                            }
+                        });
+            }
+        });
+
+        buscar1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.collection("prods")
+                        .whereEqualTo("ref", ref.getText().toString())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        idauto = document.getId();
+                                        //Log.d("prods", document.getId() + " => " + document.getData());
+                                        ref.setText(document.getData().get("ref").toString());
+                                        descrip.setText(document.getData().get("descrip").toString());
+                                        precio.setText(document.getData().get("precio").toString());
+                                    }
+                                } else {
+                                    Log.d("prods", "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
+            }
+        });
+
+
+
+        guardar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create a new user with a first and last name
+                Map<String, Object> refs = new HashMap<>();
+                refs.put("ref", ref.getText().toString());
+                refs.put("descrip", descrip.getText().toString());
+                refs.put("precio", precio.getText().toString());
+
+                // Add a new document with a generated ID
+                db.collection("prods")
+                        .add(refs)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                //Log.d("Prods", "DocumentSnapshot added with ID: " + documentReference.getId());
+                                Toast.makeText(getApplicationContext(),"Producto guardado correctamente...",Toast.LENGTH_SHORT).show();
+
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("Prods", "Error adding document", e);
+                            }
+                        });
+            }
+        });
+
+
+
+    }
+}
